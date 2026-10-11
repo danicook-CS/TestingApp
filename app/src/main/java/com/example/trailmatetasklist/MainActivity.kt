@@ -68,6 +68,22 @@ fun TrailMateTasksApp() {
     var nextId by remember { mutableStateOf(4) }
     var showCompleted by remember { mutableStateOf(true) }
 
+    val dayHikeTasks = listOf(
+        "Pack water and snacks",
+        "Choose a trail",
+        "Check the weather",
+        "Wear hiking shoes",
+        "Tell someone your route",
+        "Charge your phone"
+    )
+
+    fun addTaskIfMissing(title: String) {
+        if (tasks.none { it.title.equals(title, ignoreCase = true) }) {
+            tasks.add(Task(nextId, title))
+            nextId += 1
+        }
+    }
+
     val completedCount = tasks.count { it.isDone }
     val visibleTasks = if (showCompleted) tasks.toList() else tasks.filterNot { it.isDone }
 
@@ -144,6 +160,15 @@ fun TrailMateTasksApp() {
                 enabled = taskInput.isNotBlank()
             ) {
                 Text("Add task")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextButton(
+                onClick = { dayHikeTasks.forEach(::addTaskIfMissing) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Load day hike checklist")
             }
 
             Row(
